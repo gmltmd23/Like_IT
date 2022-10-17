@@ -22,12 +22,23 @@ public class UserService {
                 .name(userDTO.getName())
                 .build();
 
-        System.out.println(userEntity);
-
         userRepository.save(userEntity);
         return true;
     }
 
+    public boolean login(UserDTO userDTO) {
+        UserEntity foundUser = userRepository.findUserByEmail(userDTO.getEmail());
+        if(foundUser != null) {
+            String digest = encryptor.passwordToSha256(userDTO.getPassword());
+            if(digest.equals(foundUser.getPassword()))
+                return true;
+            else
+                return false;
+        }
+        else {
+            return false;
+        }
+    }
     public UserDTO findUserByEmail() {
         UserEntity userEntity = userRepository.findUserByEmail("rkskek23@naver.com");
         return (userEntity == null) ? null : new UserDTO(userEntity.getEmail(), userEntity.getPassword(), userEntity.getName());

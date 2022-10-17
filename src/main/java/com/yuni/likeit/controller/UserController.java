@@ -20,6 +20,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> login(@RequestBody UserDTO receivedUser) {
+        boolean result = userService.login(receivedUser);
+        if(result)
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        else
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
+    }
+
     @GetMapping("/getUser")
     public UserDTO getUser() {
         UserDTO user = userService.findUserByEmail();
